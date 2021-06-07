@@ -19,9 +19,11 @@ let last20messages = [];
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
+  currentGuild = client.guilds.cache.find((guild) => guild.id === SERVER_ID);
 });
 
 client.on('message', (msg) => {
+    msg.author.id
   if (msg.channel.type === 'dm' && !msg.author.bot) {
     const messageInfo = {
       messageId: uuidv4(),
@@ -34,13 +36,26 @@ client.on('message', (msg) => {
     }
     last20messages.unshift(messageInfo);
 
-    currentGuild = client.guilds.cache.find((guild) => guild.id === SERVER_ID);
     const givenChannel = currentGuild.channels.cache.find(
       (channel) => channel.name === CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE
     );
 
-    givenChannel.send(`Wiadomość nr: ${messageInfo.messageId}\n${msg.content}`)
+    givenChannel.send(`Wiadomość nr: ${messageInfo.messageId}\n${msg.content}`);
     msg.reply('Anonimowa wiadomosć została dodana');
+  }
+
+  if (
+    msg.content.startsWith('/ban author') &&
+    msg.member.hasPermission('BAN_MEMBERS') &&
+    !msg.author.bot
+  ) {
+    const messageId = msg.content.split(' ')[2];
+    const foundedAuthor = last20messages.find(
+      (messageInfo) => messageInfo.messageId == messageId
+    ).messageAuthor;
+    msg.reply(`Zbanowany użytkownik: ${foundedAuthor}`);
+    const member = msg.guild.members.cache.find((member) => member.id == foundedAuthor.id)
+    member.ban('Nadużycie anonimowych wiadomości');
   }
 });
 
