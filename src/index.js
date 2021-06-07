@@ -23,7 +23,6 @@ client.on('ready', () => {
 });
 
 client.on('message', (msg) => {
-    msg.author.id
   if (msg.channel.type === 'dm' && !msg.author.bot) {
     const messageInfo = {
       messageId: uuidv4(),
@@ -40,8 +39,14 @@ client.on('message', (msg) => {
       (channel) => channel.name === CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE
     );
 
-    givenChannel.send(`Wiadomość nr: ${messageInfo.messageId}\n${msg.content}`);
-    msg.reply('Anonimowa wiadomosć została dodana');
+    if (givenChannel) {
+      givenChannel.send(
+        `Wiadomość nr: ${messageInfo.messageId}\n${msg.content}`
+      );
+      msg.reply('Anonimowa wiadomosć została dodana');
+    } else {
+      msg.reply('Nie znaleziono kanału. Sprawdź konfigurację bota!');
+    }
   }
 
   if (
@@ -50,12 +55,25 @@ client.on('message', (msg) => {
     !msg.author.bot
   ) {
     const messageId = msg.content.split(' ')[2];
-    const foundedAuthor = last20messages.find(
+    const foundedMessageInfo = last20messages.find(
       (messageInfo) => messageInfo.messageId == messageId
-    ).messageAuthor;
-    msg.reply(`Zbanowany użytkownik: ${foundedAuthor}`);
-    const member = msg.guild.members.cache.find((member) => member.id == foundedAuthor.id)
-    member.ban('Nadużycie anonimowych wiadomości');
+    );
+
+    let foundedAuthor;
+    if (foundedMessageInfo) {
+      foundedAuthor = foundedMessageInfo.messageAuthor;
+    }
+
+    if (foundedAuthor) {
+      msg.reply(`Zbanowany użytkownik: ${foundedAuthor}`);
+      msg.guild.members.fetch({user: foundedAuthor}).then((member) => {
+        member.ban({ reason: 'Nadużycie anonimowych wiadomości' });
+      }).catch(() => {
+        msg.reply(`Nie znaleziono użytkownika`);
+      })
+    } else {
+      msg.reply(`Nie znaleziono użytkownika lub wiadomości`);
+    }
   }
 });
 
