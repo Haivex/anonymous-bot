@@ -1,8 +1,8 @@
-import { Message, TextChannel } from 'discord.js';
+import { Guild, Message, TextChannel } from 'discord.js';
 import { AnonymousMessage } from './anonymous-message.interface';
 import { v4 as uuidv4 } from 'uuid';
 
-export const sendAnonymousMessage = (msg: Message, messagesInMemory: AnonymousMessage[], targetGuild): void => {
+export const sendAnonymousMessage = (msg: Message, messagesInMemory: AnonymousMessage[], targetGuild: Guild, targetChannelName: string): void => {
         const anonymousMessage = {
           id: uuidv4(),
           content: msg.content,
@@ -14,8 +14,8 @@ export const sendAnonymousMessage = (msg: Message, messagesInMemory: AnonymousMe
         }
         messagesInMemory.unshift(anonymousMessage);
     
-        const givenChannel = currentGuild.channels.cache.find(
-          (channel) => channel.name === CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE
+        const givenChannel = targetGuild.channels.cache.find(
+          (channel) => channel.name === targetChannelName
         ) as TextChannel
     
         if (givenChannel) {
@@ -24,6 +24,6 @@ export const sendAnonymousMessage = (msg: Message, messagesInMemory: AnonymousMe
           );
           msg.reply('Anonimowa wiadomosć została dodana');
         } else {
-          msg.reply('Nie znaleziono kanału. Sprawdź konfigurację bota!');
+          throw new Error('Text Channel not found. Check bot config!');
         }
 }
