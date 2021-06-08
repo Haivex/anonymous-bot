@@ -1,7 +1,7 @@
 require('dotenv').config();
-import { v4 as uuidv4 } from 'uuid';
 import Discord, { ClientUser, Guild, TextChannel } from 'discord.js';
 import { AnonymousMessage } from './anonymous-message.interface';
+import { sendAnonymousMessage } from './send-anonymous-message';
 
 //Config for bot;
 const CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE = process.env.CHANNEL_NAME;
@@ -29,30 +29,9 @@ client.on('ready', () => {
 });
 
 client.on('message', (msg) => {
+
   if (msg.channel.type === 'dm' && !msg.author.bot) {
-    const anonymousMessage = {
-      id: uuidv4(),
-      content: msg.content,
-      author: msg.author,
-    };
-
-    if (lastMessages.length >= 20) {
-      lastMessages.pop();
-    }
-    lastMessages.unshift(anonymousMessage);
-
-    const givenChannel = currentGuild.channels.cache.find(
-      (channel) => channel.name === CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE
-    ) as TextChannel
-
-    if (givenChannel) {
-      givenChannel.send(
-        `Wiadomość nr: ${anonymousMessage.id}\n${msg.content}`
-      );
-      msg.reply('Anonimowa wiadomosć została dodana');
-    } else {
-      msg.reply('Nie znaleziono kanału. Sprawdź konfigurację bota!');
-    }
+    sendAnonymousMessage(msg, lastMessages, currentGuild)
   }
 
   if (
@@ -71,9 +50,9 @@ client.on('message', (msg) => {
     }
 
     if (foundedAuthor) {
-      msg.reply(`Zbanowany użytkownik: ${foundedAuthor}`);
       msg.guild.members.fetch({user: foundedAuthor}).then((member) => {
         member.ban({ reason: 'Nadużycie anonimowych wiadomości' });
+        msg.reply(`Zbanowany użytkownik: ${member}`);
       }).catch(() => {
         msg.reply(`Nie znaleziono użytkownika`);
       })
