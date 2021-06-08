@@ -48,6 +48,36 @@ client.on('message', (msg) => {
     } 
     banMessageAuthor(anonymousMessageId, msg, lastMessages)
   }
+
+  
+  if (
+    msg.content.startsWith('/kick author') && msg.member && 
+    msg.member.hasPermission('KICK_MEMBERS') &&
+    !msg.author.bot
+  ) {
+    const anonymousMessageId = msg.content.split(' ')[2];
+    
+    if(!anonymousMessageId) {
+      msg.reply('Nie podano numeru wiadomości! Prawidłowy format komendy: /kick author <messageID>')
+    return;
+    } 
+    kickMessageAuthor(anonymousMessageId, msg, lastMessages)
+  }
+
+  
+  if (
+    msg.content.startsWith('/warn author') && msg.member && 
+    msg.member.hasPermission('ADMINISTRATOR') &&
+    !msg.author.bot
+  ) {
+    const anonymousMessageId = msg.content.split(' ')[2];
+    
+    if(!anonymousMessageId) {
+      msg.reply('Nie podano numeru wiadomości! Prawidłowy format komendy: /warn author <messageID>')
+    return;
+    } 
+    warnMessageAuthor(anonymousMessageId, msg, lastMessages)
+  }
 });
 
 client.login(BOT_TOKEN);
