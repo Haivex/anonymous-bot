@@ -26,8 +26,11 @@ export const sendAnonymousMessage = (
   ) as TextChannel;
 
   if (givenChannel) {
-    givenChannel.send(`Wiadomość nr: ${anonymousMessage.id}\n${msg.content}`);
-    msg.reply('Anonimowa wiadomosć została dodana');
+    givenChannel.send(`Wiadomość nr: ${anonymousMessage.id}\n${msg.content}`).then(() => {
+      msg.reply('Anonimowa wiadomosć została dodana!');
+    }).catch(() => {
+      msg.reply('Coś poszło źle :( Spróbuj ponownie później!');
+    });
   } else {
     throw new Error('Text Channel not found. Check bot config!');
   }
