@@ -11,14 +11,14 @@ export const banMessageAuthor = (
   );
 
   if (!foundedMessage) {
-    commandMessage.reply(`Nie znaleziono wiadomości`);
+    commandMessage.reply(`nie znaleziono wiadomości o podanym numerze`);
     return;
   }
 
   const foundedAuthor = foundedMessage.author;
 
   if (!commandMessage.guild) {
-    commandMessage.reply(`Nie można banować użytkownika w prywatnej wiadomości`);
+    commandMessage.reply(`nie można banować użytkownika w prywatnej wiadomości`);
     return;
   }
 
@@ -26,9 +26,10 @@ export const banMessageAuthor = (
     .fetch({ user: foundedAuthor })
     .then((member) => {
       member.ban({ reason: 'Nadużycie anonimowych wiadomości' });
-      commandMessage.reply(`Zbanowany użytkownik: ${member}`);
+      commandMessage.reply(`zbanował użytkownika: ${member}`);
+      foundedAuthor.send(`${foundedAuthor}, zostałeś zbanowany za nadużycie anonimowych wiadomości`)
     })
     .catch(() => {
-      commandMessage.reply(`Nie znaleziono użytkownika`);
+      commandMessage.reply(`nie znaleziono użytkownika`);
     });
 };
