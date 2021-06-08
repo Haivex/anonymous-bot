@@ -1,5 +1,7 @@
 require('dotenv').config();
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
+import Discord, { ClientUser, Guild, TextChannel } from 'discord.js';
+import { AnonymousMessage } from './anonymous-message.interface';
 
 //Config for bot;
 const CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE = process.env.CHANNEL_NAME;
@@ -10,38 +12,42 @@ if (!CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE || !BOT_TOKEN || !SERVER_ID) {
   throw new Error('Wrong config');
 }
 
-const Discord = require('discord.js');
 const client = new Discord.Client();
 
-let currentGuild;
-
-let last20messages = [];
+let currentGuild: Guild;
+let lastMessages: AnonymousMessage[] = [];
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-  currentGuild = client.guilds.cache.find((guild) => guild.id === SERVER_ID);
+  const botName = client.user as ClientUser;
+  console.log(`Logged in as ${botName.tag}!`);
+
+  client.guilds.fetch(SERVER_ID, true).then(foundendGuild => {
+    currentGuild = foundendGuild;
+  }).catch(() => {
+    throw new Error('Server not found');
+  })
 });
 
 client.on('message', (msg) => {
   if (msg.channel.type === 'dm' && !msg.author.bot) {
-    const messageInfo = {
-      messageId: uuidv4(),
-      messageContent: msg.content,
-      messageAuthor: msg.author,
+    const anonymousMessage = {
+      id: uuidv4(),
+      content: msg.content,
+      author: msg.author,
     };
 
-    if (last20messages.length >= 20) {
-      last20messages.pop();
+    if (lastMessages.length >= 20) {
+      lastMessages.pop();
     }
-    last20messages.unshift(messageInfo);
+    lastMessages.unshift(anonymousMessage);
 
     const givenChannel = currentGuild.channels.cache.find(
       (channel) => channel.name === CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE
-    );
+    ) as TextChannel
 
     if (givenChannel) {
       givenChannel.send(
-        `Wiadomość nr: ${messageInfo.messageId}\n${msg.content}`
+        `Wiadomość nr: ${anonymousMessage.id}\n${msg.content}`
       );
       msg.reply('Anonimowa wiadomosć została dodana');
     } else {
@@ -50,18 +56,18 @@ client.on('message', (msg) => {
   }
 
   if (
-    msg.content.startsWith('/ban author') &&
+    msg.content.startsWith('/ban author') && msg.member && msg.guild &&
     msg.member.hasPermission('BAN_MEMBERS') &&
     !msg.author.bot
   ) {
     const messageId = msg.content.split(' ')[2];
-    const foundedMessageInfo = last20messages.find(
-      (messageInfo) => messageInfo.messageId == messageId
+    const foundedMessageInfo = lastMessages.find(
+      (messageInfo) => messageInfo.id == messageId
     );
 
     let foundedAuthor;
     if (foundedMessageInfo) {
-      foundedAuthor = foundedMessageInfo.messageAuthor;
+      foundedAuthor = foundedMessageInfo.author;
     }
 
     if (foundedAuthor) {
