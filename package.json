@@ -4,7 +4,9 @@
   "description": "Discord Bot for anonymous messages",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "start": "ts-node src/index.ts",
+    "start:dev": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,8 @@
   },
   "devDependencies": {
     "@types/node": "^15.12.2",
+    "@types/uuid": "^8.3.0",
+    "nodemon": "^2.0.7",
     "typescript": "^4.3.2"
   }
 }
