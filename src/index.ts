@@ -2,7 +2,9 @@ require('dotenv').config();
 import Discord, { ClientUser, Guild, TextChannel } from 'discord.js';
 import { AnonymousMessage } from './anonymous-message.interface';
 import { banMessageAuthor } from './ban-user';
+import { kickMessageAuthor } from './kick-user';
 import { sendAnonymousMessage } from './send-anonymous-message';
+import { warnMessageAuthor } from './warn-user';
 
 //Config for bot;
 const CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE = process.env.CHANNEL_NAME;
