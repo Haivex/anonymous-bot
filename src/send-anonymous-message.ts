@@ -2,6 +2,8 @@ import { Guild, Message, TextChannel } from 'discord.js';
 import { AnonymousMessage } from './anonymous-message.interface';
 import { v4 as uuidv4 } from 'uuid';
 
+const MESSAGES_LIMIT = 20;
+
 export const sendAnonymousMessage = (msg: Message, messagesInMemory: AnonymousMessage[], targetGuild: Guild, targetChannelName: string): void => {
         const anonymousMessage = {
           id: uuidv4(),
@@ -9,7 +11,7 @@ export const sendAnonymousMessage = (msg: Message, messagesInMemory: AnonymousMe
           author: msg.author,
         };
     
-        if (messagesInMemory.length >= 20) {
+        if (messagesInMemory.length >= MESSAGES_LIMIT) {
             messagesInMemory.pop();
         }
         messagesInMemory.unshift(anonymousMessage);
