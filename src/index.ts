@@ -45,7 +45,7 @@ client.on('message', (msg) => {
     const anonymousMessageId = msg.content.split(' ')[2];
     
     if(!anonymousMessageId) {
-      msg.reply('Nie podano numeru wiadomości! Prawidłowy format komendy: /ban author <messageID>')
+      msg.reply('nie podano numeru wiadomości! Prawidłowy format komendy: /ban author <messageID>')
     return;
     } 
     banMessageAuthor(anonymousMessageId, msg, lastMessages)
@@ -60,7 +60,7 @@ client.on('message', (msg) => {
     const anonymousMessageId = msg.content.split(' ')[2];
     
     if(!anonymousMessageId) {
-      msg.reply('Nie podano numeru wiadomości! Prawidłowy format komendy: /kick author <messageID>')
+      msg.reply('nie podano numeru wiadomości! Prawidłowy format komendy: /kick author <messageID>')
     return;
     } 
     kickMessageAuthor(anonymousMessageId, msg, lastMessages)
@@ -75,7 +75,7 @@ client.on('message', (msg) => {
     const anonymousMessageId = msg.content.split(' ')[2];
     
     if(!anonymousMessageId) {
-      msg.reply('Nie podano numeru wiadomości! Prawidłowy format komendy: /warn author <messageID>')
+      msg.reply('nie podano numeru wiadomości! Prawidłowy format komendy: /warn author <messageID>')
     return;
     } 
     warnMessageAuthor(anonymousMessageId, msg, lastMessages)
