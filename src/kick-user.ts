@@ -26,8 +26,8 @@ export const kickMessageAuthor = (
     .fetch({ user: foundedAuthor })
     .then((member) => {
       member.kick('Nadużycie anonimowych wiadomości');
-      commandMessage.reply(`wyrzucił użytkownika: ${member}`);
-      foundedAuthor.send(`${foundedAuthor}, zostałeś wyrzucony z serwera za nadużycie anonimowych wiadomości`)
+      commandMessage.reply(`wyrzucił użytkownika: <@${member}>`);
+      foundedAuthor.send(`<@${foundedAuthor}>, zostałeś wyrzucony z serwera za nadużycie anonimowych wiadomości`)
     })
     .catch(() => {
       commandMessage.reply(`nie znaleziono użytkownika`);

@@ -25,8 +25,8 @@ export const warnMessageAuthor = (
   commandMessage.guild.members
     .fetch({ user: foundedAuthor })
     .then((member) => {
-      commandMessage.reply(`ostrzegł użytkownika: ${member} o nadużyciu anonimowych wiadomości`);
-      foundedAuthor.send(`${foundedAuthor}, otrzymujesz ostrzeżenie za nadużycie anonimowych wiadomości`)
+      commandMessage.reply(`ostrzegł użytkownika: <@${member}> o nadużyciu anonimowych wiadomości`);
+      foundedAuthor.send(`<@${foundedAuthor}>, otrzymujesz ostrzeżenie za nadużycie anonimowych wiadomości`)
     })
     .catch(() => {
       commandMessage.reply(`nie znaleziono użytkownika`);

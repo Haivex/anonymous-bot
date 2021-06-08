@@ -26,8 +26,8 @@ export const banMessageAuthor = (
     .fetch({ user: foundedAuthor })
     .then((member) => {
       member.ban({ reason: 'Nadużycie anonimowych wiadomości' });
-      commandMessage.reply(`zbanował użytkownika: ${member}`);
-      foundedAuthor.send(`${foundedAuthor}, zostałeś zbanowany za nadużycie anonimowych wiadomości`)
+      commandMessage.reply(`zbanował użytkownika: <@${member}>`);
+      foundedAuthor.send(`<@${foundedAuthor}>, zostałeś zbanowany za nadużycie anonimowych wiadomości`)
     })
     .catch(() => {
       commandMessage.reply(`nie znaleziono użytkownika`);
