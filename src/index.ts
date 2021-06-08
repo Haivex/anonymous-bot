@@ -1,5 +1,5 @@
 require('dotenv').config();
-import Discord, { ClientUser, Guild, TextChannel } from 'discord.js';
+import Discord, { ClientUser, Guild, TextChannel, Client } from 'discord.js';
 import { AnonymousMessage } from './anonymous-message.interface';
 import { banMessageAuthor } from './ban-user';
 import { kickMessageAuthor } from './kick-user';
@@ -15,7 +15,7 @@ if (!CHANNEL_NAME_FOR_ANONYMOUS_MESSAGE || !BOT_TOKEN || !SERVER_ID) {
   throw new Error('Wrong config');
 }
 
-const client = new Discord.Client();
+const client = new Client();
 
 let currentGuild: Guild;
 let lastMessages: AnonymousMessage[] = [];

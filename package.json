@@ -4,7 +4,7 @@
   "description": "Discord Bot for anonymous messages",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --outDir build",
     "start": "ts-node src/index.ts",
     "start:dev": "nodemon"
   },
