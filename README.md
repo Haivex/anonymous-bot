@@ -8,9 +8,9 @@ Purpose of the project was to learn Discord API, Discord.js library and to under
 - Send command result in a private message to message's author , e.g: '@Haivex, you have been banned for breaking rules'
 
 # Commands
-- /ban author <messageId> -- ban the author of the given message
-- /kick author <messageId> -- kick the author of the given message
-- /warn author <messageId> -- warn the author of the given message
+- /ban author [messageId] -- ban the author of the given message
+- /kick author [messageId] -- kick the author of the given message
+- /warn author [messageId] -- warn the author of the given message
 
 # Bot Config
 Put following variables to .env file
